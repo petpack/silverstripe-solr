@@ -18,6 +18,10 @@ class SolrSearchService {
 		'context' => '/solr',
 	);
 	
+	public static $subite_field  = 'SubsiteID_i';
+	
+	protected static $multiple_subsite_values_enabled = false;
+	
 	/**
 	 * A list of all fields that will be searched through by default, if the user hasn't specified
 	 * any in their search query. 
@@ -52,6 +56,19 @@ class SolrSearchService {
 		
 		$this->queryBuilders['default'] = 'SolrQueryBuilder'; 
 		$this->queryBuilders['dismax'] = 'DismaxSolrSearchBuilder';
+	}
+	
+	/**
+	 * Enable pages/data-objects having multiple values for subsite.
+	 * @param boolean $value
+	 */
+	public static function enableMultipleSubsiteValues($value = true) {
+		if (static::$multiple_subsite_values_enabled = $value) {
+			static::$subite_field  = 'SubsiteID_mi';
+		}
+		else {
+			static::$subite_field  = 'SubsiteID_i';
+		}
 	}
 
 	/**
@@ -133,23 +150,42 @@ class SolrSearchService {
 	 *
 	 */
 	public function index($dataObject, $stage=null) {
+		/* debug */ Debug::bog('indexing', $dataObject);
 		$document = new Apache_Solr_Document();
 		$fieldsToIndex = array();
 
 		$id = 0;
+		$object = null;
+		$fieldsToIndex = null;
 		if (is_object($dataObject)) {
-			$fieldsToIndex = $this->getSearchableFieldsFor($dataObject); // $dataObject->searchableFields();
-			$object = $this->objectToFields($dataObject);
-			$id = $dataObject->ID;
+			if ($dataObject->hasMethod('getSolrIndexable')) {
+				$object = $dataObject->getSolrIndexable();
+			}
+			else {
+				$fieldsToIndex = $this->getSearchableFieldsFor($dataObject); // $dataObject->searchableFields();
+				$object = $this->objectToFields($dataObject);
+				$id = $dataObject->ID;
+			}
 		} else {
 			$object = $dataObject;
-			$id = isset($dataObject['ID']) ? $dataObject['ID'] : 0;
-
+		}
+		if (!$object) {
+			$object = $dataObject;
+		}
+		/* debug */ Debug::bog('object', $object);
+		if (!$id) {
+			$id = isset($object['ID']) ? $object['ID'] : 0;
+		}
+		if (!$fieldsToIndex) {
 			$fieldsToIndex = isset($object['index_fields']) ? $object['index_fields'] : array(
 				'Title' => array(),
 				'Content' => array(),
 			);
 		}
+		if (isset($object['index_fields'])) {
+			unset($object['index_fields']);
+		}
+		/* debug */ Debug::bog('fieldsToIndex', $fieldsToIndex);
 
 		$fieldsToIndex['SS_ID'] = true;
 		$fieldsToIndex['LastEdited'] = true;
@@ -175,7 +211,8 @@ class SolrSearchService {
 		if (ClassInfo::exists('Subsite')) {
 			$fieldsToIndex['SubsiteID'] = true;
 			if (is_object($dataObject)) {
-				$object['SubsiteID'] = array('Type' => 'Int', 'Value' => $dataObject->SubsiteID);
+				$fieldType = (static::$multiple_subsite_values_enabled) ? 'MultiInt' : 'Int';
+				$object['SubsiteID'] = array('Type' => $fieldType, 'Value' => $dataObject->SubsiteID);
 			}
 		}
 
@@ -196,6 +233,12 @@ class SolrSearchService {
 				continue;
 			}
 
+			/* debug */ 
+			if (!isset($valueDesc['Type'])) {
+				/* debug */ Debug::bog('no type on', $field, 'with values ', $valueDesc);
+				
+			}
+			/* debug */ 
 			$type = $valueDesc['Type'];
 			$value = $valueDesc['Value'];
 
@@ -209,6 +252,7 @@ class SolrSearchService {
 			}
 
 			$fieldName = $this->mapper->mapType($field, $type, $fieldsToIndex[$field]);
+			/* debug */ Debug::bog('mapped ', $field, 'to', $fieldName);
 
 			if (!$fieldName) {
 				continue;
@@ -221,6 +265,7 @@ class SolrSearchService {
 					$document->addField($fieldName, $v);
 				}
 			} else {
+				/* debug */ Debug::bog('adding field '.$fieldName.':', $value);
 				$document->$fieldName = $value;
 			}
 		}
@@ -228,12 +273,18 @@ class SolrSearchService {
 		if ($id) {
 			try {
 				$document->id = $classType.'_'.$id;
+				/* debug */ Debug::bog('document:', $document);
 				$this->getSolr()->addDocument($document);
 				$this->getSolr()->commit();
 				$this->getSolr()->optimize();
 			} catch (Exception $ie) {
 				SS_Log::log($ie, SS_Log::ERR);
+				/* debug */ exit(1);
 			}
+		}
+		/* debug */ 
+		else {
+			/* debug */ Debug::bog('NO id for ');
 		}
 	}
 
@@ -245,15 +296,15 @@ class SolrSearchService {
 	 * @param DataObject $dataObject
 	 * @return array
 	 */
-	protected function objectToFields($dataObject) {
+	public function objectToFields($dataObject) {
 		$ret = array();
 
 		$fields = Object::combined_static($dataObject->ClassName, 'db');
 		$fields['Created'] = 'SS_Datetime';
 		$fields['LastEdited'] = 'SS_Datetime';
 
-		$ret['ClassName'] = array('Type' => 'Varchar', 'Value' => $dataObject->class);
 		$ret['SS_ID'] = array('Type' => 'Int', 'Value' => $dataObject->ID);
+		$ret['ClassName'] = array('Type' => 'Varchar', 'Value' => $dataObject->class);
 
 		foreach($fields as $name => $type) {
 			if (preg_match('/^(\w+)\(/', $type, $match)) {
@@ -273,6 +324,7 @@ class SolrSearchService {
 			$ret[$name] = array('Type' => $type, 'Value' => $value);
 		}
 
+		/* debug */ Debug::bog('objectToFields(', $dataObject,')=', $ret);
 		return $ret;
 	}
 	
@@ -338,7 +390,7 @@ class SolrSearchService {
 		}
 		// be very specific about the subsite support :). 
 		if (ClassInfo::exists('Subsite')) {
-			$query->andWith('SubsiteID_i', Subsite::currentSubsiteID());
+			$query->andWith(static::$subite_field, Subsite::currentSubsiteID());
 			// $query = "($query) AND (SubsiteID_i:".Subsite::currentSubsiteID().')';
 		}
 
@@ -542,6 +594,10 @@ class SolrSchemaMapper {
 			case 'Int':
 			case 'Integer': {
 				return $field.'_i';
+			}
+			case 'MultiInt':
+			case 'MultiInteger': {
+				return $field.'_mi';
 			}
 			default: {
 				return $field.'_mt';

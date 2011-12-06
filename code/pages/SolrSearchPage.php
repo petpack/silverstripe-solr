@@ -147,28 +147,6 @@ class SolrSearchPage extends Page {
 	}
 
 	/**
-	 * Ensures that there is always a 404 page
-	 * by checking if there's an instance of
-	 * ErrorPage with a 404 error code. If there
-	 * is not, one is created when the DB is built.
-	 */
-	function requireDefaultRecords() {
-		parent::requireDefaultRecords();
-
-		$page = DataObject::get_one('SolrSearchPage');
-		if(!($page && $page->exists())) {
-			$page = new SolrSearchPage();
-			$page->Title = _t('SolrSearchPage.DEFAULT_PAGE_TITLE', 'Search');
-			$page->Content = '';
-			$page->ResultsPerPage = 10;
-			$page->Status = 'New page';
-			$page->write();
-
-			DB::alteration_message('Search page created', 'created');
-		}
-	}
-
-	/**
 	 * Get the solr instance. 
 	 * 
 	 * Note that we do this as a method just in case we decide in future
@@ -385,12 +363,12 @@ class SolrSearchPage_Controller extends Page_Controller {
 			new TextField('Search', _t('SolrSearchPage.SEARCH','Search'), isset($_GET['Search']) ? $_GET['Search'] : '')
 		);
 
-		$objFields = $this->data()->getSelectableFields();
-		$objFields = array_merge(array('' => 'Any'), $objFields);
-		$sortBy = isset($_GET['SortBy']) ? $_GET['SortBy'] : $this->data()->SortBy;
-		$sortDir = isset($_GET['SortDir']) ? $_GET['SortDir'] : $this->data()->SortDir;
-		$fields->push(new DropdownField('SortBy', _t('SolrSearchPage.SORT_BY', 'Sort By'), $objFields, $sortBy));
-		$fields->push(new DropdownField('SortDir', _t('SolrSearchPage.SORT_DIR', 'Sort Direction'), $this->data()->dbObject('SortDir')->enumValues(), $sortDir));
+		#$objFields = $this->data()->getSelectableFields();
+		#$objFields = array_merge(array('' => 'Any'), $objFields);
+		#$sortBy = isset($_GET['SortBy']) ? $_GET['SortBy'] : $this->data()->SortBy;
+		#$sortDir = isset($_GET['SortDir']) ? $_GET['SortDir'] : $this->data()->SortDir;
+		#$fields->push(new DropdownField('SortBy', _t('SolrSearchPage.SORT_BY', 'Sort By'), $objFields, $sortBy));
+		#$fields->push(new DropdownField('SortDir', _t('SolrSearchPage.SORT_DIR', 'Sort Direction'), $this->data()->dbObject('SortDir')->enumValues(), $sortDir));
 
 		$actions = new FieldSet(new FormAction('results', _t('SolrSearchPage.DO_SEARCH', 'Search')));
 		

@@ -492,6 +492,8 @@
         Longer patterns will be matched first.  if equal size patterns
         both match, the first appearing in the schema will be used.  -->
    <dynamicField name="*_i"  type="int"    indexed="true"  stored="false"/>
+   <!-- A multi valued integer field -->
+   <dynamicField name="*_mi"  type="int"    indexed="true"  stored="false" multiValued="true"/>
    <dynamicField name="*_l"  type="long"   indexed="true"  stored="false"/>
 
    <dynamicField name="*_s"  type="string"  indexed="true"  stored="false"/>

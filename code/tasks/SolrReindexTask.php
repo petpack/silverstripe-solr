@@ -32,13 +32,15 @@ class SolrReindexTask extends BuildTask
 		$search->getSolr()->deleteByQuery('ClassNameHierarchy_ms:Page');
 		/* @var $search SolrSearchService */
 		$count = 0;
-		foreach ($pages as $page) {
-			$search->index($page, 'Draft');
-			if ($page->Status == 'Published') {
-				$search->index($page, 'Live');
+		if ($pages) {
+			foreach ($pages as $page) {
+				$search->index($page, 'Draft');
+				if ($page->Status == 'Published') {
+					$search->index($page, 'Live');
+				}
+				echo "<p>Reindexed (#$page->ID) $page->Title</p>\n";
+				$count ++;
 			}
-			echo "<p>Reindexed (#$page->ID) $page->Title</p>\n";
-			$count ++;
 		}
 		echo "Reindex complete, $count objects re-indexed<br/>";
 	}

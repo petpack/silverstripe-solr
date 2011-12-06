@@ -51,23 +51,43 @@ class SolrIndexable extends DataObjectDecorator {
 	public function onAfterWrite() {
 		if (!self::$indexing) return;
 
+		if (!$this->ownerIsIndexable()) {
+			return;
+		}
 		$changes = $this->owner->getChangedFields(true, 2);
 		
 		if (count($changes)) {
 			
-			$stage = null;
-			// if it's being written and a versionable, then save only in the draft
-			// repository. 
-			if (Object::has_extension($this->owner, 'Versioned')) {
-				$stage = 'Stage';
-			}
+			$this->solrIndex();
+		}
+	}
+	
+	/**
+	 * Returns true if the onwer can currently be indexed.
+	 */
+	public function ownerIsIndexable() {
+		if ($this->owner->hasMethod('isIndexable')) {
+			return $this->owner->isIndexable();
+		}
+		return true;
+	}
+	
+	/**
+	 * Forces a index of this data to the solr server.
+	 */
+	public function solrIndex() {
+		$stage = null;
+		// if it's being written and a versionable, then save only in the draft
+		// repository. 
+		if (Object::has_extension($this->owner, 'Versioned')) {
+			$stage = 'Stage';
+		}
 
-			if (class_exists('SolrIndexItemJob')) {
-				$this->createIndexJob($this->owner, $stage);
-			} else {
-				// make sure only the fields that are highlighted in searchable_fields are included!!
-				singleton('SolrSearchService')->index($this->owner, $stage);
-			}
+		if (class_exists('SolrIndexItemJob')) {
+			$this->createIndexJob($this->owner, $stage);
+		} else {
+			// make sure only the fields that are highlighted in searchable_fields are included!!
+			singleton('SolrSearchService')->index($this->owner, $stage);
 		}
 	}
 
@@ -91,6 +111,13 @@ class SolrIndexable extends DataObjectDecorator {
 
 	function onAfterDelete() {
 		if (!self::$indexing) return;
+		$this->solrUnindex();
+	}
+	
+	/**
+	 * Forces an unindex of this data from the solr server.
+	 */
+	public function solrUnindex() {
 		if (class_exists('SolrIndexItemJob')) {
 			$this->createIndexJob($this->owner, null, 'unindex');
 		} else {

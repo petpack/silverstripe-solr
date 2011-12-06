@@ -334,6 +334,8 @@ class Apache_Solr_Service
 		// Unfortunately, it will still create a notice in analyzers if we don't set it here
 		$http_response_header = null;
 
+		/* debug */ 
+		/* debug */ Debug::bog('Sending rawGet:', $url);
 		$response = new Apache_Solr_Response(@file_get_contents($url, false, $this->_getContext), $http_response_header, $this->_createDocuments, $this->_collapseSingleValueArrays);
 
 		if ($response->getHttpStatus() != 200)
@@ -388,6 +390,8 @@ class Apache_Solr_Service
 		// see http://us.php.net/manual/en/wrappers.http.php for documentation
 		// Unfortunately, it will still create a notice in analyzers if we don't set it here
 		$http_response_header = null;
+		/* debug */ 
+		/* debug */ Debug::bog('Sending rawPost:', $rawPost);
 
 		$response = new Apache_Solr_Response(@file_get_contents($url, false, $this->_postContext), $http_response_header, $this->_createDocuments, $this->_collapseSingleValueArrays);
 
