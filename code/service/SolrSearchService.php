@@ -150,7 +150,6 @@ class SolrSearchService {
 	 *
 	 */
 	public function index($dataObject, $stage=null) {
-		/* debug */ Debug::bog('indexing', $dataObject);
 		$document = new Apache_Solr_Document();
 		$fieldsToIndex = array();
 
@@ -172,7 +171,6 @@ class SolrSearchService {
 		if (!$object) {
 			$object = $dataObject;
 		}
-		/* debug */ Debug::bog('object', $object);
 		if (!$id) {
 			$id = isset($object['ID']) ? $object['ID'] : 0;
 		}
@@ -185,7 +183,6 @@ class SolrSearchService {
 		if (isset($object['index_fields'])) {
 			unset($object['index_fields']);
 		}
-		/* debug */ Debug::bog('fieldsToIndex', $fieldsToIndex);
 
 		$fieldsToIndex['SS_ID'] = true;
 		$fieldsToIndex['LastEdited'] = true;
@@ -233,12 +230,6 @@ class SolrSearchService {
 				continue;
 			}
 
-			/* debug */ 
-			if (!isset($valueDesc['Type'])) {
-				/* debug */ Debug::bog('no type on', $field, 'with values ', $valueDesc);
-				
-			}
-			/* debug */ 
 			$type = $valueDesc['Type'];
 			$value = $valueDesc['Value'];
 
@@ -252,7 +243,6 @@ class SolrSearchService {
 			}
 
 			$fieldName = $this->mapper->mapType($field, $type, $fieldsToIndex[$field]);
-			/* debug */ Debug::bog('mapped ', $field, 'to', $fieldName);
 
 			if (!$fieldName) {
 				continue;
@@ -265,7 +255,6 @@ class SolrSearchService {
 					$document->addField($fieldName, $v);
 				}
 			} else {
-				/* debug */ Debug::bog('adding field '.$fieldName.':', $value);
 				$document->$fieldName = $value;
 			}
 		}
@@ -273,18 +262,12 @@ class SolrSearchService {
 		if ($id) {
 			try {
 				$document->id = $classType.'_'.$id;
-				/* debug */ Debug::bog('document:', $document);
 				$this->getSolr()->addDocument($document);
 				$this->getSolr()->commit();
 				$this->getSolr()->optimize();
 			} catch (Exception $ie) {
 				SS_Log::log($ie, SS_Log::ERR);
-				/* debug */ exit(1);
 			}
-		}
-		/* debug */ 
-		else {
-			/* debug */ Debug::bog('NO id for ');
 		}
 	}
 
@@ -324,7 +307,6 @@ class SolrSearchService {
 			$ret[$name] = array('Type' => $type, 'Value' => $value);
 		}
 
-		/* debug */ Debug::bog('objectToFields(', $dataObject,')=', $ret);
 		return $ret;
 	}
 	
@@ -632,7 +614,21 @@ class SolrSchemaMapper {
 					return date('o-m-d\TH:i:s\Z', $ts);
 				}
 				case 'HTMLText': {
-					return strip_tags($value);
+					//Add whitespace before and after tags, so that tags that visually separate words
+					//are properly treated in the stripped version. Otherwise 
+					//  <div>woot</div><div>stuff</div>
+					//will result in 
+					//  wootstuff
+					//rather than
+					//  woot stuff
+				    $value = str_replace(
+					    array('<', '>'),
+					    array(' <', '> '),
+					    $value
+				    ); 
+				    $value = html_entity_decode(strip_tags($value)); 
+				    //Strip extraneous whitespace.
+				    return preg_replace('/\s+/',' ',$value); 
 				}
 				default: {
 					return $value;
