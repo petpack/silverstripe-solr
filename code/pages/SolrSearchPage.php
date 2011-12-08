@@ -363,12 +363,12 @@ class SolrSearchPage_Controller extends Page_Controller {
 			new TextField('Search', _t('SolrSearchPage.SEARCH','Search'), isset($_GET['Search']) ? $_GET['Search'] : '')
 		);
 
-		#$objFields = $this->data()->getSelectableFields();
-		#$objFields = array_merge(array('' => 'Any'), $objFields);
-		#$sortBy = isset($_GET['SortBy']) ? $_GET['SortBy'] : $this->data()->SortBy;
-		#$sortDir = isset($_GET['SortDir']) ? $_GET['SortDir'] : $this->data()->SortDir;
-		#$fields->push(new DropdownField('SortBy', _t('SolrSearchPage.SORT_BY', 'Sort By'), $objFields, $sortBy));
-		#$fields->push(new DropdownField('SortDir', _t('SolrSearchPage.SORT_DIR', 'Sort Direction'), $this->data()->dbObject('SortDir')->enumValues(), $sortDir));
+		$objFields = $this->data()->getSelectableFields();
+		$objFields = array_merge(array('' => 'Any'), $objFields);
+		$sortBy = isset($_GET['SortBy']) ? $_GET['SortBy'] : $this->data()->SortBy;
+		$sortDir = isset($_GET['SortDir']) ? $_GET['SortDir'] : $this->data()->SortDir;
+		$fields->push(new DropdownField('SortBy', _t('SolrSearchPage.SORT_BY', 'Sort By'), $objFields, $sortBy));
+		$fields->push(new DropdownField('SortDir', _t('SolrSearchPage.SORT_DIR', 'Sort Direction'), $this->data()->dbObject('SortDir')->enumValues(), $sortDir));
 
 		$actions = new FieldSet(new FormAction('results', _t('SolrSearchPage.DO_SEARCH', 'Search')));
 		

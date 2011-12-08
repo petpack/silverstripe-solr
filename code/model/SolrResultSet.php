@@ -130,14 +130,8 @@ class SolrResultSet
 			if ($documents && isset($documents->docs)) {
 				$totalAdded = 0;
 				foreach ($documents->docs as $doc) {
-					$bits = explode('_', $doc->id);
-					if (count($bits) == 3) {
-						list($type, $id, $stage) = $bits;
-					} else {
-						list($type, $id) = $bits;
-						$stage = Versioned::current_stage();
-					}
-					
+					$type = $doc->SS_ClassName;
+					$id = $doc->SS_ID;
 					if (!$type || !$id) {
 						singleton('SolrUtils')->log("Invalid solr document ID $doc->id", SS_Log::WARN);
 						continue;
@@ -145,7 +139,7 @@ class SolrResultSet
 
 					// a double sanity check for the stage here. 
 					if ($currentStage = Versioned::current_stage()) {
-						if ($currentStage != $stage) {
+						if ($doc->SS_Stage && !in_array($currentStage, $doc->SS_Stage)) {
 							continue;
 						}
 					}

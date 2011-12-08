@@ -139,8 +139,8 @@ class SolrSearchService {
 	 * 		)
 	 * )
 	 * 
-	 * You should include a field named 'ID' that dictates the 
-	 * ID of the object, and a field named 'ClassName' that is the 
+	 * You should include a field named 'SS_ID' that dictates the 
+	 * ID of the object, and a field named 'SS_ClassName' that is the 
 	 * name of the document's type
 	 * 
 	 * @param DataObject $object
@@ -187,7 +187,7 @@ class SolrSearchService {
 		$fieldsToIndex['SS_ID'] = true;
 		$fieldsToIndex['LastEdited'] = true;
 		$fieldsToIndex['Created'] = true;
-		$fieldsToIndex['ClassName'] = true;
+		$fieldsToIndex['SS_ClassName'] = true;
 		$fieldsToIndex['ClassNameHierarchy'] = true;
 
 		// the stage we're on when we write this doc to the index.
@@ -213,7 +213,7 @@ class SolrSearchService {
 			}
 		}
 
-		$classType = isset($object['ClassName']) ? $object['ClassName']['Value'] : 'INVALID_CLASS_TYPE';
+		$classType = isset($object['SS_ClassName']) ? $object['SS_ClassName']['Value'] : 'INVALID_CLASS_TYPE';
 
 		// we're not indexing these fields just at the moment because the conflict
 		unset($object['ID']);
@@ -287,7 +287,8 @@ class SolrSearchService {
 		$fields['LastEdited'] = 'SS_Datetime';
 
 		$ret['SS_ID'] = array('Type' => 'Int', 'Value' => $dataObject->ID);
-		$ret['ClassName'] = array('Type' => 'Varchar', 'Value' => $dataObject->class);
+		$ret['ID'] = $dataObject->ID;
+		$ret['SS_ClassName'] = array('Type' => 'Varchar', 'Value' => $dataObject->class);
 
 		foreach($fields as $name => $type) {
 			if (preg_match('/^(\w+)\(/', $type, $match)) {
@@ -384,7 +385,7 @@ class SolrSearchService {
 			$stage = 'Live';
 		}
 
-		$query->andWith('SS_Stage_ms', $stage);
+		$query->andWith('SS_Stage', $stage);
 		// $query = "($query) AND (SS_Stage_ms:$stage)";
 
 		$extraParams = $query->getParams();
@@ -527,7 +528,9 @@ class SolrSchemaMapper {
 		'LastEdited'			=> 'last_modified',
 		'Content'				=> 'text',
 		'ClassNameHierarchy'	=> 'ClassNameHierarchy_ms',
-		'SS_Stage'				=> 'SS_Stage_ms',
+		'SS_Stage'				=> 'SS_Stage',
+		'SS_ID'				    => 'SS_ID',
+		'SS_ClassName'			=> 'SS_ClassName',
 	);
 
 	/**

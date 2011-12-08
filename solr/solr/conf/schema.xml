@@ -484,6 +484,17 @@
      -->
    
 
+   <!-- Silverstripe specific fields:
+        These are used internally by silverstripe  
+    -->
+   <!-- The silverstripe id of the stored object  -->
+   <field name="SS_ID" type="int" indexed="true" stored="true"/>
+   <!-- The silverstripe class of the stored object  -->
+   <field name="SS_ClassName" type="string" indexed="true" stored="true"/>
+   <!-- The silverstripe stage of the stored object. Only really relevant for SiteTree sub-classes, or other versioned objects  -->
+   <field name="SS_Stage" type="string" indexed="true" stored="true" multiValued="true"/>
+
+
    <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
         will be used if the name matches any of the patterns.
         RESTRICTION: the glob-like pattern in the name attribute must have
