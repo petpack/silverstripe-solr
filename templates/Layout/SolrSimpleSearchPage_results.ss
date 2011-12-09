@@ -19,10 +19,10 @@
 	            <% else %>
 	              <h3><a class="searchResultHeader" href="$Link">$Title</a></h3>
 	            <% end_if %>
-			  <% if Content %>
-	          	$Content.FirstParagraph(html)
+			  <% if SolrSummaryContent %>
+	          	$SolrSummaryContent.FirstParagraph(html)
 			  <% end_if %>
-	          <a class="readMoreLink" href="$Link" title="Read more about &quot;{$Title}&quot;">Read more about &quot;{$Title}&quot;...</a>
+	          <a class="readMoreLink" href="$SolrSummaryLink" title="Read more about &quot;{$Title}&quot;">Read more about &quot;{$Title}&quot;...</a>
 	        </li>
 	      <% end_control %>
 	    </ul>

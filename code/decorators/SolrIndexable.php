@@ -124,4 +124,22 @@ class SolrIndexable extends DataObjectDecorator {
 			singleton('SolrSearchService')->unindex($this->owner);
 		}
 	}
+	
+	/**
+	 * Returns the content used for the results summary. HTML is allowed.
+	 * By default returns the owner's content attribute.
+	 * Used in search results templates.
+	 */
+	public function getSolrSummaryContent() {
+		return $this->owner->obj('Content');
+	}
+	
+	/**
+	 * Returns a link to read more about a result.
+	 * By default returns the result of a call to the owner's Link methoj
+	 * Used in search results templates.
+	 */
+	public function getSolrSummaryLink() {
+		return $this->owner->Link();
+	}
 }

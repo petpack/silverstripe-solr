@@ -70,16 +70,7 @@ class SolrSimpleSearchPage extends Page {
 			return null;
 		}
 
-		$query = null;
-		$builder = $this->getSolr()->getQueryBuilder($this->QueryType);
-		
-		if (isset($_GET['Search'])) {
-			$query = $_GET['Search'];
-
-			// lets convert it to a base solr query
-			$builder->baseQuery($query);
-		}
-
+		$builder = $this->queryBuilder();
 		$offset = isset($_GET['start']) ? $_GET['start'] : 0;
 		$limit = isset($_GET['limit']) ? $_GET['limit'] : ($this->ResultsPerPage ? $this->ResultsPerPage : 10);
 
@@ -89,6 +80,18 @@ class SolrSimpleSearchPage extends Page {
 
 		$this->query = $this->getSolr()->query($builder, $offset, $limit, $params);
 		return $this->query;
+	}
+	
+	protected function queryBuilder() {
+		$builder = $this->getSolr()->getQueryBuilder();
+		
+		if (isset($_GET['Search'])) {
+			$query = $_GET['Search'];
+
+			// lets convert it to a base solr query
+			$builder->baseQuery($query);
+		}
+		return $builder;
 	}
 
 	/**
