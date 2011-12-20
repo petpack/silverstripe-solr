@@ -157,7 +157,7 @@ class SolrResultSet
 
 						$totalAdded++;
 					} else {
-						singleton('SolrUtils')->log("Object $doc->id is no longer in the system, removing from index", SS_Log::WARN);
+						//singleton('SolrUtils')->log("Object $doc->id is no longer in the system, removing from index", SS_Log::WARN);
 						$this->solr->unindex($type, $id);
 					}
 				}
