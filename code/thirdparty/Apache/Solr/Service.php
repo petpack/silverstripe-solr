@@ -730,30 +730,51 @@ class Apache_Solr_Service
 	 */
 	protected function _documentToXmlFragment(Apache_Solr_Document $document)
 	{
-		$cleanValue = function( $value ) {
-			return htmlspecialchars(mb_convert_encoding($value, 'UTF-8'), ENT_NOQUOTES, 'UTF-8');
+		$xml = '<doc';
+
+		if ($document->getBoost() !== false)
+		{
+			$xml .= ' boost="' . $document->getBoost() . '"';
 		}
 
-		$xml = '<doc'
-			. ($document->getBoost() !== false ? ' boost="' . $document->getBoost() . '"' : '')
-			. '>';
+		$xml .= '>';
 
 		foreach ($document as $key => $value)
 		{
-			$key = $cleanValue($key);
+			$key = htmlspecialchars($key, ENT_QUOTES, 'UTF-8');
 			$fieldBoost = $document->getFieldBoost($key);
-			if( !is_array($value) ) $value = array($value);
 
-			foreach ($value as $multivalue)
+			if (is_array($value))
 			{
-				$multivalue = $cleanValue($multivalue);
+				foreach ($value as $multivalue)
+				{
+					$xml .= '<field name="' . $key . '"';
 
-				$xml .= '<field name="' . $key . '"'
-					. ($fieldBoost !== false ? ' boost="' . $fieldBoost . '"' : '')
-					. '>' . $multivalue . '</field>';
+					if ($fieldBoost !== false)
+					{
+						$xml .= ' boost="' . $fieldBoost . '"';
 
-				// only set the boost for the first field in the set
-				if( $fieldBoost !== false ) $fieldBoost = false;
+						// only set the boost for the first field in the set
+						$fieldBoost = false;
+					}
+
+					$multivalue = htmlspecialchars($multivalue, ENT_NOQUOTES, 'UTF-8');
+
+					$xml .= '>' . $multivalue . '</field>';
+				}
+			}
+			else
+			{
+				$xml .= '<field name="' . $key . '"';
+
+				if ($fieldBoost !== false)
+				{
+					$xml .= ' boost="' . $fieldBoost . '"';
+				}
+
+				$value = htmlspecialchars($value, ENT_NOQUOTES, 'UTF-8');
+
+				$xml .= '>' . $value . '</field>';
 			}
 		}
 
