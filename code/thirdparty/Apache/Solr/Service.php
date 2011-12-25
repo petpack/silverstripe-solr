@@ -732,11 +732,7 @@ class Apache_Solr_Service
 	{
 		$cleanValue = function( $value ) {
 			return htmlspecialchars(mb_convert_encoding($value, 'UTF-8'), ENT_NOQUOTES, 'UTF-8');
-<<<<<<< HEAD
 		};
-=======
-		}
->>>>>>> f4b4aa70e9e63e495403f6590521c887f3b7b296
 
 		$xml = '<doc'
 			. ($document->getBoost() !== false ? ' boost="' . $document->getBoost() . '"' : '')
