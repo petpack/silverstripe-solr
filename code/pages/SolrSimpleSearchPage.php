@@ -42,7 +42,7 @@ class SolrSimpleSearchPage extends Page {
 
 		return $fields;
 	}
-
+	
 	/**
 	 * Get the solr instance. 
 	 * 
@@ -184,4 +184,9 @@ class SolrSimpleSearchPage_Controller extends Page_Controller {
 
 	  	return $this->customise($data)->renderWith(array('SolrSimpleSearchPage_results', 'SolrSimpleSearchPage', 'Page'));
 	}
+	
+	public function SearchTerm() {
+		return isset($_GET['Search']) ? $_GET['Search'] : '';
+	}
+
 }
