@@ -502,9 +502,9 @@ class Apache_Solr_Service_Balancer
 	 * Add a Solr Document to the index
 	 *
 	 * @param Apache_Solr_Document $document
-	 * @param boolean $allowDups
-	 * @param boolean $overwritePending
-	 * @param boolean $overwriteCommitted
+	 * @param SS_Boolean $allowDups
+	 * @param SS_Boolean $overwritePending
+	 * @param SS_Boolean $overwriteCommitted
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -537,9 +537,9 @@ class Apache_Solr_Service_Balancer
 	 * Add an array of Solr Documents to the index all at once
 	 *
 	 * @param array $documents Should be an array of Apache_Solr_Document instances
-	 * @param boolean $allowDups
-	 * @param boolean $overwritePending
-	 * @param boolean $overwriteCommitted
+	 * @param SS_Boolean $allowDups
+	 * @param SS_Boolean $overwritePending
+	 * @param SS_Boolean $overwriteCommitted
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -572,8 +572,8 @@ class Apache_Solr_Service_Balancer
 	 * Send a commit command.  Will be synchronous unless both wait parameters are set
 	 * to false.
 	 *
-	 * @param boolean $waitFlush
-	 * @param boolean $waitSearcher
+	 * @param SS_Boolean $waitFlush
+	 * @param SS_Boolean $waitSearcher
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -607,7 +607,7 @@ class Apache_Solr_Service_Balancer
 	 * a complete and well formed "delete" xml document
 	 *
 	 * @param string $rawPost
-	 * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -640,9 +640,9 @@ class Apache_Solr_Service_Balancer
 	 * Create a delete document based on document ID
 	 *
 	 * @param string $id
-	 * @param boolean $fromPending
-	 * @param boolean $fromCommitted
-	 * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Boolean $fromPending
+	 * @param SS_Boolean $fromCommitted
+	 * @param SS_Float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -675,9 +675,9 @@ class Apache_Solr_Service_Balancer
 	 * Create and post a delete document based on multiple document IDs.
 	 *
 	 * @param array $ids Expected to be utf-8 encoded strings
-	 * @param boolean $fromPending
-	 * @param boolean $fromCommitted
-	 * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Boolean $fromPending
+	 * @param SS_Boolean $fromCommitted
+	 * @param SS_Float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -710,9 +710,9 @@ class Apache_Solr_Service_Balancer
 	 * Create a delete document based on a query and submit it
 	 *
 	 * @param string $rawQuery
-	 * @param boolean $fromPending
-	 * @param boolean $fromCommitted
-	 * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Boolean $fromPending
+	 * @param SS_Boolean $fromCommitted
+	 * @param SS_Float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -745,9 +745,9 @@ class Apache_Solr_Service_Balancer
 	 * Send an optimize command.  Will be synchronous unless both wait parameters are set
 	 * to false.
 	 *
-	 * @param boolean $waitFlush
-	 * @param boolean $waitSearcher
-	 * @param float $timeout Maximum expected duration of the optimize operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Boolean $waitFlush
+	 * @param SS_Boolean $waitSearcher
+	 * @param SS_Float $timeout Maximum expected duration of the optimize operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -780,8 +780,8 @@ class Apache_Solr_Service_Balancer
 	 * Simple Search interface
 	 *
 	 * @param string $query The raw query string
-	 * @param int $offset The starting offset for result documents
-	 * @param int $limit The maximum number of result documents to return
+	 * @param SS_Int $offset The starting offset for result documents
+	 * @param SS_Int $limit The maximum number of result documents to return
 	 * @param array $params key / value pairs for query parameters, use arrays for multivalued parameters
 	 * @param string $method The HTTP method (Apache_Solr_Service::METHOD_GET or Apache_Solr_Service::METHOD::POST)
 	 * @return Apache_Solr_Response

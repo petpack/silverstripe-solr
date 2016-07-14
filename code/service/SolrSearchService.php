@@ -60,7 +60,7 @@ class SolrSearchService {
 	
 	/**
 	 * Enable pages/data-objects having multiple values for subsite.
-	 * @param boolean $value
+	 * @param SS_Boolean $value
 	 */
 	public static function enableMultipleSubsiteValues($value = true) {
 		if (static::$multiple_subsite_values_enabled = $value) {
@@ -74,7 +74,7 @@ class SolrSearchService {
 	/**
 	 * Is solr alive?
 	 *
-	 * @return boolean
+	 * @return SS_Boolean
 	 */
 	public function isConnected() {
 		return $this->getSolr()->ping();
@@ -357,9 +357,9 @@ class SolrSearchService {
 	 *
 	 * @param String $query
 	 * 			The lucene query to execute.
-	 * @param int $page
+	 * @param SS_Int $page
 	 * 			What result page are we on?
-	 * @param int $limit
+	 * @param SS_Int $limit
 	 * 			How many items to limit the query to return
 	 * @param array $params
 	 * 			A set of parameters to be passed along with the query

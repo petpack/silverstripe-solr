@@ -12,8 +12,8 @@ class SolrTypeConfiguration extends DataObject {
 		'FieldMappings'	=> 'MultiValueField',
 	);
 	
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
+	public function getCMSFields($params = null) {
+		$fields = parent::getCMSFields($params);
 		
 		$types = ClassInfo::dataClassesFor('DataObject');
 		array_shift($types);

@@ -70,7 +70,7 @@ class Apache_Solr_Document implements IteratorAggregate
 	/**
 	 * Document boost value
 	 *
-	 * @var float
+	 * @var SS_Float
 	 */
 	protected $_documentBoost = false;
 
@@ -232,7 +232,7 @@ class Apache_Solr_Document implements IteratorAggregate
 	 * Get the currently set field boost for a document field
 	 *
 	 * @param string $key
-	 * @return float currently set field boost, false if one is not set
+	 * @return SS_Float currently set field boost, false if one is not set
 	 */
 	public function getFieldBoost($key)
 	{
@@ -338,7 +338,7 @@ class Apache_Solr_Document implements IteratorAggregate
 	 * </code>
 	 *
 	 * @param string $key
-	 * @return boolean
+	 * @return SS_Boolean
 	 */
 	public function __isset($key)
 	{

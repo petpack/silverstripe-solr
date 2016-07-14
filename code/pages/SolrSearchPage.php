@@ -67,8 +67,8 @@ class SolrSearchPage extends Page {
 	 */
 	public static $additional_search_types = array();
 
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
+	public function getCMSFields($params = null) {
+		$fields = parent::getCMSFields($params);
 
 		$fields->addFieldToTab('Root.Content.Main', new CheckboxField('StartWithListing', _t('SolrSearchPage.START_LISTING', 'Display initial listing')), 'Content');
 

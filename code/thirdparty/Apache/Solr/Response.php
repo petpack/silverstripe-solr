@@ -72,7 +72,7 @@ class Apache_Solr_Response
 	/**
 	 * Whether the raw response has been parsed
 	 *
-	 * @var boolean
+	 * @var SS_Boolean
 	 */
 	protected $_isParsed = false;
 
@@ -87,7 +87,7 @@ class Apache_Solr_Response
 	 * Data parsing flags.  Determines what extra processing should be done
 	 * after the data is initially converted to a data structure.
 	 *
-	 * @var boolean
+	 * @var SS_Boolean
 	 */
 	protected $_createDocuments = true,
 			$_collapseSingleValueArrays = true;
@@ -97,8 +97,8 @@ class Apache_Solr_Response
 	 *
 	 * @param string $rawResponse
 	 * @param array $httpHeaders
-	 * @param boolean $createDocuments Whether to convert the documents json_decoded as stdClass instances to Apache_Solr_Document instances
-	 * @param boolean $collapseSingleValueArrays Whether to make multivalued fields appear as single values
+	 * @param SS_Boolean $createDocuments Whether to convert the documents json_decoded as stdClass instances to Apache_Solr_Document instances
+	 * @param SS_Boolean $collapseSingleValueArrays Whether to make multivalued fields appear as single values
 	 */
 	public function __construct($rawResponse, $httpHeaders = array(), $createDocuments = true, $collapseSingleValueArrays = true)
 	{
@@ -243,7 +243,7 @@ class Apache_Solr_Response
 	 * Magic function for isset function on parsed data
 	 *
 	 * @param string $key
-	 * @return boolean
+	 * @return SS_Boolean
 	 */
 	public function __isset($key)
 	{

@@ -11,14 +11,14 @@ class SolrIndexable extends DataObjectDecorator {
 	/**
 	 * We might not want to index, eg during a data load
 	 * 
-	 * @var boolean
+	 * @var SS_Boolean
 	 */
 	public static $indexing = true;
 
 	/**
 	 * Should we index draft content too?
 	 *
-	 * @var boolean
+	 * @var SS_Boolean
 	 */
 	public static $index_draft = true;
 	

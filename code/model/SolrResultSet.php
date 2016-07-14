@@ -52,7 +52,7 @@ class SolrResultSet
 	/**
 	 * The total number of results found in this query
 	 *
-	 * @var Int
+	 * @var SS_Int
 	 */
 	protected $totalResults;
 
@@ -107,7 +107,7 @@ class SolrResultSet
 	/**
 	 * The number of results found for the given parameters.
 	 *
-	 * @return Int
+	 * @return SS_Int
 	 */
 	public function getTotalResults() {
 		return $this->totalResults;

@@ -130,7 +130,7 @@ class Apache_Solr_Service
 	 * Whether {@link Apache_Solr_Response} objects should create {@link Apache_Solr_Document}s in
 	 * the returned parsed data
 	 *
-	 * @var boolean
+	 * @var SS_Boolean
 	 */
 	protected $_createDocuments = true;
 
@@ -138,7 +138,7 @@ class Apache_Solr_Service
 	 * Whether {@link Apache_Solr_Response} objects should have multivalue fields with only a single value
 	 * collapsed to appear as a single value would.
 	 *
-	 * @var boolean
+	 * @var SS_Boolean
 	 */
 	protected $_collapseSingleValueArrays = true;
 
@@ -168,7 +168,7 @@ class Apache_Solr_Service
 	/**
 	 * Keep track of whether our URLs have been constructed
 	 *
-	 * @var boolean
+	 * @var SS_Boolean
 	 */
 	protected $_urlsInited = false;
 
@@ -307,7 +307,7 @@ class Apache_Solr_Service
 	 * Central method for making a get operation against this Solr Server
 	 *
 	 * @param string $url
-	 * @param float $timeout Read timeout in seconds
+	 * @param SS_Float $timeout Read timeout in seconds
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If a non 200 response status is returned
@@ -349,7 +349,7 @@ class Apache_Solr_Service
 	 *
 	 * @param string $url
 	 * @param string $rawPost
-	 * @param float $timeout Read timeout in seconds
+	 * @param SS_Float $timeout Read timeout in seconds
 	 * @param string $contentType
 	 * @return Apache_Solr_Response
 	 *
@@ -512,7 +512,7 @@ class Apache_Solr_Service
 	/**
 	 * Get the current state of teh create documents flag.
 	 *
-	 * @return boolean
+	 * @return SS_Boolean
 	 */
 	public function getCreateDocuments()
 	{
@@ -522,7 +522,7 @@ class Apache_Solr_Service
 	/**
 	 * Set the collapse single value arrays flag.
 	 *
-	 * @param boolean $collapseSingleValueArrays
+	 * @param SS_Boolean $collapseSingleValueArrays
 	 */
 	public function setCollapseSingleValueArrays($collapseSingleValueArrays)
 	{
@@ -532,7 +532,7 @@ class Apache_Solr_Service
 	/**
 	 * Get the current state of the collapse single value arrays flag.
 	 *
-	 * @return boolean
+	 * @return SS_Boolean
 	 */
 	public function getCollapseSingleValueArrays()
 	{
@@ -600,8 +600,8 @@ class Apache_Solr_Service
 	 * Call the /admin/ping servlet, can be used to quickly tell if a connection to the
 	 * server is able to be made.
 	 *
-	 * @param float $timeout maximum time to wait for ping in seconds, -1 for unlimited (default is 2)
-	 * @return float Actual time taken to ping the server, FALSE if timeout or HTTP error status occurs
+	 * @param SS_Float $timeout maximum time to wait for ping in seconds, -1 for unlimited (default is 2)
+	 * @return SS_Float Actual time taken to ping the server, FALSE if timeout or HTTP error status occurs
 	 */
 	public function ping($timeout = 2)
 	{
@@ -671,9 +671,9 @@ class Apache_Solr_Service
 	 * Add a Solr Document to the index
 	 *
 	 * @param Apache_Solr_Document $document
-	 * @param boolean $allowDups
-	 * @param boolean $overwritePending
-	 * @param boolean $overwriteCommitted
+	 * @param SS_Boolean $allowDups
+	 * @param SS_Boolean $overwritePending
+	 * @param SS_Boolean $overwriteCommitted
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -695,9 +695,9 @@ class Apache_Solr_Service
 	 * Add an array of Solr Documents to the index all at once
 	 *
 	 * @param array $documents Should be an array of Apache_Solr_Document instances
-	 * @param boolean $allowDups
-	 * @param boolean $overwritePending
-	 * @param boolean $overwriteCommitted
+	 * @param SS_Boolean $allowDups
+	 * @param SS_Boolean $overwritePending
+	 * @param SS_Boolean $overwriteCommitted
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -779,10 +779,10 @@ class Apache_Solr_Service
 	/**
 	 * Send a commit command.  Will be synchronous unless both wait parameters are set to false.
 	 *
-	 * @param boolean $optimize Defaults to true
-	 * @param boolean $waitFlush Defaults to true
-	 * @param boolean $waitSearcher Defaults to true
-	 * @param float $timeout Maximum expected duration (in seconds) of the commit operation on the server (otherwise, will throw a communication exception). Defaults to 1 hour
+	 * @param SS_Boolean $optimize Defaults to true
+	 * @param SS_Boolean $waitFlush Defaults to true
+	 * @param SS_Boolean $waitSearcher Defaults to true
+	 * @param SS_Float $timeout Maximum expected duration (in seconds) of the commit operation on the server (otherwise, will throw a communication exception). Defaults to 1 hour
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -803,7 +803,7 @@ class Apache_Solr_Service
 	 * a complete and well formed "delete" xml document
 	 *
 	 * @param string $rawPost Expected to be utf-8 encoded xml document
-	 * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -817,9 +817,9 @@ class Apache_Solr_Service
 	 * Create a delete document based on document ID
 	 *
 	 * @param string $id Expected to be utf-8 encoded
-	 * @param boolean $fromPending
-	 * @param boolean $fromCommitted
-	 * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Boolean $fromPending
+	 * @param SS_Boolean $fromCommitted
+	 * @param SS_Float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -841,9 +841,9 @@ class Apache_Solr_Service
 	 * Create and post a delete document based on multiple document IDs.
 	 *
 	 * @param array $ids Expected to be utf-8 encoded strings
-	 * @param boolean $fromPending
-	 * @param boolean $fromCommitted
-	 * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Boolean $fromPending
+	 * @param SS_Boolean $fromCommitted
+	 * @param SS_Float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -872,9 +872,9 @@ class Apache_Solr_Service
 	 * Create a delete document based on a query and submit it
 	 *
 	 * @param string $rawQuery Expected to be utf-8 encoded
-	 * @param boolean $fromPending
-	 * @param boolean $fromCommitted
-	 * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Boolean $fromPending
+	 * @param SS_Boolean $fromCommitted
+	 * @param SS_Float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -896,9 +896,9 @@ class Apache_Solr_Service
 	 * Send an optimize command.  Will be synchronous unless both wait parameters are set
 	 * to false.
 	 *
-	 * @param boolean $waitFlush
-	 * @param boolean $waitSearcher
-	 * @param float $timeout Maximum expected duration of the commit operation on the server (otherwise, will throw a communication exception)
+	 * @param SS_Boolean $waitFlush
+	 * @param SS_Boolean $waitSearcher
+	 * @param SS_Float $timeout Maximum expected duration of the commit operation on the server (otherwise, will throw a communication exception)
 	 * @return Apache_Solr_Response
 	 *
 	 * @throws Apache_Solr_HttpTransportException If an error occurs during the service call
@@ -917,8 +917,8 @@ class Apache_Solr_Service
 	 * Simple Search interface
 	 *
 	 * @param string $query The raw query string
-	 * @param int $offset The starting offset for result documents
-	 * @param int $limit The maximum number of result documents to return
+	 * @param SS_Int $offset The starting offset for result documents
+	 * @param SS_Int $limit The maximum number of result documents to return
 	 * @param array $params key / value pairs for other query parameters (see Solr documentation), use arrays for parameter keys used more than once (e.g. facet.field)
 	 * @param string $method The HTTP method (Apache_Solr_Service::METHOD_GET or Apache_Solr_Service::METHOD::POST)
 	 * @return Apache_Solr_Response
